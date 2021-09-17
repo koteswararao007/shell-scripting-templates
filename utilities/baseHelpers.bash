@@ -64,8 +64,7 @@ _execute_() {
     elif ${VERBOSE}; then
         if eval "${CMD}"; then
             if "${QUIET_RESULT}"; then
-                VERBOSE=${SAVE_VERBOSE}
-                return 0
+                VERBOSE=$SAVE_VERBOSE
             elif "${ECHO_RESULT}"; then
                 echo "${EXECUTE_MESSAGE}"
             elif "${SUCCESS_RESULT}"; then
@@ -75,10 +74,10 @@ _execute_() {
             else
                 info "${EXECUTE_MESSAGE}"
             fi
-            VERBOSE=${SAVE_VERBOSE}
-            return 0
         else
-            if "${ECHO_RESULT}"; then
+            if "${QUIET_RESULT}"; then
+                VERBOSE=$SAVE_VERBOSE
+            elif "${ECHO_RESULT}"; then
                 echo "warning: ${EXECUTE_MESSAGE}"
             else
                 warning "${EXECUTE_MESSAGE}"
@@ -90,7 +89,6 @@ _execute_() {
         if eval "${CMD}" &>/dev/null; then
             if "${QUIET_RESULT}"; then
                 VERBOSE=${SAVE_VERBOSE}
-                return 0
             elif "${ECHO_RESULT}"; then
                 echo "${EXECUTE_MESSAGE}"
             elif "${SUCCESS_RESULT}"; then
@@ -100,10 +98,10 @@ _execute_() {
             else
                 info "${EXECUTE_MESSAGE}"
             fi
-            VERBOSE=${SAVE_VERBOSE}
-            return 0
         else
-            if "${ECHO_RESULT}"; then
+            if "${QUIET_RESULT}"; then
+                VERBOSE=$SAVE_VERBOSE
+            elif "${ECHO_RESULT}"; then
                 echo "error: ${EXECUTE_MESSAGE}"
             else
                 warning "${EXECUTE_MESSAGE}"
@@ -112,6 +110,8 @@ _execute_() {
             "${PASS_FAILURES}" && return 0 || return 1
         fi
     fi
+    VERBOSE=$SAVE_VERBOSE
+    return 0
 }
 
 _findBaseDir_() {
